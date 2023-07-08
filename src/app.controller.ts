@@ -6,6 +6,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Public } from './decorator/public.decorator';
 
 @Controller()
 export class AppController {
@@ -16,11 +17,9 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/fibonacci')
-  async findFibonacci(
-    @Query('n') n: string,
-    // @Req() request: Request,
-  ): Promise<number> {
+  @Public()
+  @Get('/fibonacciPublic')
+  async findFibonacciPublic(@Query('n') n: number): Promise<number> {
     const num = Number(n);
     if (isNaN(num)) {
       throw new HttpException('n can only be a number', HttpStatus.BAD_REQUEST);
@@ -32,8 +31,9 @@ export class AppController {
       );
     }
     return this.appService.getFibonacci(num);
-
-    // console.log(n);
-    // return 0;
+  }
+  @Get('/fibonacci')
+  async findFibonacci(@Query('n') n: number): Promise<number> {
+    return this.findFibonacciPublic(n);
   }
 }
