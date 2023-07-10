@@ -3,6 +3,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  ParseIntPipe,
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
@@ -19,21 +20,19 @@ export class AppController {
 
   @Public()
   @Get('/fibonacciPublic')
-  async findFibonacciPublic(@Query('n') n: number): Promise<number> {
-    const num = Number(n);
-    if (isNaN(num)) {
-      throw new HttpException('n can only be a number', HttpStatus.BAD_REQUEST);
-    }
-    if (num < 0) {
+  async findFibonacciPublic(
+    @Query('n', ParseIntPipe) n: number,
+  ): Promise<number> {
+    if (n < 0) {
       throw new HttpException(
         'n cannot be less then 0',
         HttpStatus.BAD_REQUEST,
       );
     }
-    return this.appService.getFibonacci(num);
+    return this.appService.getFibonacci(n);
   }
   @Get('/fibonacci')
-  async findFibonacci(@Query('n') n: number): Promise<number> {
+  async findFibonacci(@Query('n', ParseIntPipe) n: number): Promise<number> {
     return this.findFibonacciPublic(n);
   }
 }
