@@ -3,14 +3,17 @@ import {
   FileTypeValidator,
   ParseFilePipe,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+import { Response } from 'express';
+
 @Controller('image')
 export class ImageController {
-  @Post('upload')
+  @Post('uploadPng')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @UploadedFile(
@@ -19,7 +22,9 @@ export class ImageController {
       }),
     )
     file: Express.Multer.File,
+    @Res() res: Response,
   ) {
     console.log(file);
+    res.contentType('image/png').send(file.buffer);
   }
 }

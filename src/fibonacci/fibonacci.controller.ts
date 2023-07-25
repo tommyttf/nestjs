@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { FibonacciService } from './fibonacci.service';
 import { Public } from '../decorator/public.decorator';
-import { FibonacciDto } from './fibonacci.dto';
+import { FibonacciDto } from './dto/fibonacci.dto';
 
 @Controller('fibonacci')
 export class FibonacciController {
