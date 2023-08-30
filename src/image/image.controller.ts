@@ -27,7 +27,6 @@ export class ImageController {
     file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    console.log(file);
     res.contentType('image/png').send(file.buffer);
   }
 
@@ -42,9 +41,24 @@ export class ImageController {
     file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    console.log(file);
     res
       .contentType('image/jpeg')
       .send(await this.imageService.pngBufferToJpegBuffer(file.buffer));
+  }
+
+  @Post('pngToJpgWorker')
+  @UseInterceptors(FileInterceptor('file'))
+  async pngToJpgWorker(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: 'image/png' })],
+      }),
+    )
+    file: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    res
+      .contentType('image/jpeg')
+      .send(await this.imageService.pngBufferToJpegBufferByWorker(file.buffer));
   }
 }
